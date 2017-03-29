@@ -2,6 +2,7 @@
 const repo = require("../lib/repo");
 const program = require('commander');
 const fs = require('fs');
+const colors = require('colors/safe');
 
 program
   .option('-u, --user [username]', 'Get repos for user')
@@ -23,7 +24,7 @@ if (program.user && program.output) {
     } else {
       fs.appendFile(program.output, JSON.stringify(repo) + '\n', (err) => {
         if (err) throw err;
-        console.log(`${repo.owner}/${repo.name} saved stats`);
+        console.log(colors.green(`${repo.owner}/${repo.name} saved stats`));
       });
     }
   }, (_, repos) => {
