@@ -6,8 +6,9 @@ const fs = require('fs');
 program
   .option('-u, --user [username]', 'Get repos for user')
   .option('-o, --output [file]', 'JSON file containing the statistics for each repo')
+  .option('--from [num]', 'Index of oldest repo to start from')
+  .option('--to [num]', 'Index of oldest repo to stop')
   .parse(process.argv);
-
 
 if(!process.env.GITHUB_ACCESS_TOKEN) {
   console.error('GITHUB_ACCESS_TOKEN not set to a valid GitHub access token')
@@ -15,13 +16,16 @@ if(!process.env.GITHUB_ACCESS_TOKEN) {
 }
 
 if (program.user && program.output) {
-  const writer = fs.createWriteStream(program.output);
-  repo.getAllUserRepoStats(program.user, (err, repo) => {
+  repo.getAllUserRepoStats(program.user, program.from, program.to, (err, repo) => {
     if(err) {
       console.error(err);
       console.error(err.stack);
     } else {
-      writer.write(JSON.stringify(repo) + '\n');
+			fs.appendFile(program.output, JSON.stringify(repo) + '\n', (err) => {
+				if (err) throw err;
+				console.log(`${repo.owner}/${repo.name} saved stats`);
+			});
+      writer.write();
     }
   }, (_, repos) => {
     console.log('Finished collecting stats for', repos.length, 'repos');
