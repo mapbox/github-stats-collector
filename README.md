@@ -7,7 +7,7 @@ All information is stored in a line-delimited JSON file where each repository is
 ## Usage
 
 ```bash
-npm install
+npm install -g @mapbox/github-stats-collector
 ```
 
 ### Dependencies
@@ -24,14 +24,14 @@ Make sure you expose a `GITHUB_ACCESS_TOKEN` with access to your repository data
 
 ```bash
 export GITHUB_ACCESS_TOKEN=23adfxadfasdf...
-./bin/collect-repo-stats -u mapbox -o repostats.json
+collect-repo-stats -u mapbox -o repostats.json
 ```
 
 For very large organizations you want to fetch stats in batches to not exhaust your GitHub API quotas.
 
 ```bash
-./bin/collect-repo-stats -u mapbox -o repostats.json --from 0 --to 500
-./bin/collect-repo-stats -u mapbox -o repostats.json --from 500 --to 1000
+collect-repo-stats -u mapbox -o repostats.json --from 0 --to 500
+collect-repo-stats -u mapbox -o repostats.json --from 500 --to 1000
 ```
 
 **Pitfalls:**
