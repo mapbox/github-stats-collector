@@ -21,11 +21,10 @@ if (program.user && program.output) {
       console.error(err);
       console.error(err.stack);
     } else {
-			fs.appendFile(program.output, JSON.stringify(repo) + '\n', (err) => {
-				if (err) throw err;
-				console.log(`${repo.owner}/${repo.name} saved stats`);
-			});
-      writer.write();
+      fs.appendFile(program.output, JSON.stringify(repo) + '\n', (err) => {
+        if (err) throw err;
+        console.log(`${repo.owner}/${repo.name} saved stats`);
+      });
     }
   }, (_, repos) => {
     console.log('Finished collecting stats for', repos.length, 'repos');
