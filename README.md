@@ -1,4 +1,4 @@
-# GitHub Stats Collector
+# GitHub Stats Collector [![Build Status](https://travis-ci.org/mapbox/github-stats-collector.svg?branch=master)](https://travis-ci.org/mapbox/github-stats-collector)
 
 Collect repository statistics, issues and comments for all repositories in a GitHub organization.
 It also clones and analyzes the codebase for certain properties like lines of code.
