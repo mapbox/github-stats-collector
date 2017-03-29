@@ -9,6 +9,7 @@ program
   .option('-o, --output [file]', 'JSON file containing the statistics for each repo')
   .option('--from [num]', 'Index of oldest repo to start from')
   .option('--to [num]', 'Index of oldest repo to stop')
+  .option('--concurrency [num]', 'How many requests to send in parallel')
   .parse(process.argv);
 
 if(!process.env.GITHUB_ACCESS_TOKEN) {
@@ -17,7 +18,7 @@ if(!process.env.GITHUB_ACCESS_TOKEN) {
 }
 
 if (program.user && program.output) {
-  repo.getAllUserRepoStats(program.user, program.from, program.to, (err, repo) => {
+  repo.getAllUserRepoStats(program.user, parseInt(program.concurrency || 1), program.from, program.to, (err, repo) => {
     if(err) {
       console.error(err);
       console.error(err.stack);
