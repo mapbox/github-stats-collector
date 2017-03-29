@@ -1,0 +1,46 @@
+{
+  "name": "github-stats-collector",
+  "version": "1.0.0",
+  "description": "Collect information about repos and issues from GitHub",
+  "main": "index.js",
+  "bin": {
+    "collect-repo-stats": "./bin/collect-repo-stats"
+  },
+  "scripts": {
+    "test": "eslint --ext js {lib,bin}"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-unstyled",
+    "parserOptions": {
+      "ecmaVersion": 6
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/github-stats-collector.git"
+  },
+  "author": "",
+  "license": "BSD-3",
+  "bugs": {
+    "url": "https://github.com/mapbox/github-stats-collector/issues"
+  },
+  "homepage": "https://github.com/mapbox/github-stats-collector#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "commander": "^2.9.0",
+    "d3-queue": "^3.0.4",
+    "ejs": "^2.5.6",
+    "github": "^9.1.0",
+    "js-yaml": "^3.8.2",
+    "node-yaml": "^3.0.3",
+    "nodegit": "^0.18.0",
+    "retry": "^0.10.1",
+    "rimraf": "^2.6.1",
+    "simple-statistics": "^2.5.0",
+    "tmp": "0.0.31"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.0",
+    "eslint-config-unstyled": "^1.1.0"
+  }
+}
