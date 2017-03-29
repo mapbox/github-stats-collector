@@ -1,5 +1,5 @@
 {
-  "name": "github-stats-collector",
+  "name": "@mapbox/github-stats-collector",
   "version": "1.0.0",
   "description": "Collect information about repos and issues from GitHub",
   "main": "index.js",
