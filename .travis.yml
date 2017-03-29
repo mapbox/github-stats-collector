@@ -1,0 +1,6 @@
+language: node_js
+node_js:
+- "4"
+script:
+- npm test
+- node bin/collect-repo-stats -u lukasmartinelli -o repostats.json --from 0 --to 10
