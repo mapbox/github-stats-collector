@@ -1,4 +1,9 @@
 # GitHub Stats Collector
+
+Collect repository statistics, issues and comments for all repositories in a GitHub organization.
+It also clones and analyzes the codebase for certain properties like lines of code.
+All information is stored in a line-delimited JSON file where each repository is a JSON object.
+
 ## Usage
 
 ```bash
