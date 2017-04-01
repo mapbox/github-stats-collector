@@ -20,10 +20,8 @@ if(!process.env.GITHUB_ACCESS_TOKEN) {
 if (program.user && program.output) {
   repo.getAllUserRepoStats(program.user, parseInt(program.concurrency || 1), program.from, program.to, (err, repo) => {
     if(err) {
-      if(err) {
-        console.error(colors.red(`${repo.owner.login}/${repo.name} failed ${err}`));
-        if(err.stack) console.error(colors.red(firstError.stack));
-      }
+      console.error(colors.red(`${repo.owner.login}/${repo.name} failed ${err}`));
+      if(err.stack) console.error(colors.red(err.stack));
     } else {
       fs.appendFile(program.output, JSON.stringify(repo) + '\n', (err) => {
         if (err) throw err;
