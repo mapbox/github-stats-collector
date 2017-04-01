@@ -2,13 +2,13 @@
 const repo = require("../lib/repo");
 const program = require('commander');
 const fs = require('fs');
+const readline = require('readline');
 const colors = require('colors/safe');
+const d3 = require("d3-queue");
 
 program
-  .option('-u, --user [username]', 'Get repos for user')
+  .option('-i, --input [file]', 'JSON file containing each repo to fetch')
   .option('-o, --output [file]', 'JSON file containing the statistics for each repo')
-  .option('--from [num]', 'Index of oldest repo to start from')
-  .option('--to [num]', 'Index of oldest repo to stop')
   .option('--concurrency [num]', 'How many requests to send in parallel')
   .parse(process.argv);
 
@@ -17,20 +17,40 @@ if(!process.env.GITHUB_ACCESS_TOKEN) {
   program.outputHelp();
 }
 
-if (program.user && program.output) {
-  repo.getAllUserRepoStats(program.user, parseInt(program.concurrency || 1), program.from, program.to, (err, repo) => {
-    if(err) {
-      console.error(colors.red(`${repo.owner.login}/${repo.name} failed ${err}`));
-      if(err.stack) console.error(colors.red(err.stack));
-    } else {
-      fs.appendFile(program.output, JSON.stringify(repo) + '\n', (err) => {
-        if (err) throw err;
-        console.log(colors.green(`${repo.owner}/${repo.name} saved stats`));
-      });
-    }
-  }, (err, repos) => {
-    if (err) throw err;
-    console.log('Finished collecting stats for', repos.length, 'repos');
+if (program.input && program.output) {
+  const lineReader = readline.createInterface({
+    input: fs.createReadStream(program.input)
+  });
+
+  function getStats(r, cb) {
+    repo.getRepoStats(r, (err, stats) => {
+      if (err) {
+        console.error(colors.red(`${repo.owner.login}/${repo.name} failed ${err}`));
+        if(err.stack) console.error(colors.red(err.stack));
+      } else {
+        fs.appendFile(program.output, JSON.stringify(stats) + '\n', (err) => {
+          if (err) throw err;
+          console.log(colors.green(`${stats.owner}/${stats.name} saved stats`));
+        });
+      }
+      cb(null, stats);
+    });
+  }
+
+  const q = d3.queue(parseInt(program.concurrency || 1));
+  lineReader.on('line', function (line) {
+    const repo = JSON.parse(line);
+    q.defer(getStats, repo);
+  });
+
+  lineReader.on('end', () => {
+    q.awaitAll((err, stats) => {
+      if (err) {
+        console.error('Could not finish collecting stats');
+        throw err;
+      }
+      console.log('Finished collecting stats for', stats.length, 'repos');
+    });
   });
 } else {
   program.outputHelp();

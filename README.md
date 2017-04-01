@@ -16,23 +16,26 @@ npm install -g @mapbox/github-stats-collector
 
 Make sure you have `cloc` installed with `brew install cloc` or `npm install -g cloc`.
 This is used to count single lines of code in your repos.
-
-### Fetch Stats
-
-Dump all GitHub statistics of the organization into a JSON file.
 Make sure you expose a `GITHUB_ACCESS_TOKEN` with access to your repository data.
 
 ```bash
 export GITHUB_ACCESS_TOKEN=23adfxadfasdf...
-collect-repo-stats -u mapbox -o repostats.json
 ```
 
-For very large organizations you want to fetch stats in batches to not exhaust your GitHub API quotas.
+### Fetch Stats
 
-```bash
-collect-repo-stats -u mapbox -o repostats.json --from 0 --to 500
-collect-repo-stats -u mapbox -o repostats.json --from 500 --to 1000
+Fetch all repositories and store them in a file.
+
 ```
+collect-repos -u mapbox -o repos.json
+```
+
+Fetch GitHub statistics for all repos in the input file and store them in a new JSON file.
+
+```
+collect-repo-stats -i repos.json -u mapbox -o repos.json
+```
+
 
 **Pitfalls:**
 - This will hammer the GitHub API to get statistics about your repositories. If you have more than a thousand repos you will hit the GitHub API rate limit
