@@ -11,6 +11,7 @@ program
   .option('-i, --input [file]', 'JSON file containing each repo to fetch')
   .option('-o, --output [file]', 'JSON file containing the statistics for each repo')
   .option('--concurrency [num]', 'How many requests to send in parallel')
+  .option('--use-https', 'Clone with HTTPS instead of SSH')
   .parse(process.argv);
 
 if(!process.env.GITHUB_ACCESS_TOKEN) {
@@ -26,7 +27,7 @@ if (program.input && program.output) {
   let completedCount = 0;
 
   function getStats(r, cb) {
-    repo.getRepoStats(r, (err, stats) => {
+    repo.getRepoStats(!program.useHttps, r, (err, stats) => {
       if (err) {
         console.error(colors.red(`${r.full_name} failed ${err}`));
         if(err.stack) console.error(colors.red(err.stack));
