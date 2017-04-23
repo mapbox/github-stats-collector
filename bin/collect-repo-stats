@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict';
 const repo = require("../lib/repo");
 const program = require('commander');
 const fs = require('fs');
@@ -21,16 +22,20 @@ if (program.input && program.output) {
   const lineReader = readline.createInterface({
     input: fs.createReadStream(program.input)
   });
+  let reposCount = 0;
+  let completedCount = 0;
 
   function getStats(r, cb) {
     repo.getRepoStats(r, (err, stats) => {
       if (err) {
-        console.error(colors.red(`${repo.owner.login}/${repo.name} failed ${err}`));
+        console.error(colors.red(`${r.full_name} failed ${err}`));
         if(err.stack) console.error(colors.red(err.stack));
       } else {
         fs.appendFile(program.output, JSON.stringify(stats) + '\n', (err) => {
           if (err) throw err;
           console.log(colors.green(`${stats.owner}/${stats.name} saved stats`));
+          completedCount += 1;
+          console.log(colors.blue(`Completed ${completedCount}/${reposCount} repos`));
         });
       }
       cb(null, stats);
@@ -40,10 +45,12 @@ if (program.input && program.output) {
   const q = d3.queue(parseInt(program.concurrency || 1));
   lineReader.on('line', function (line) {
     const repo = JSON.parse(line);
+    reposCount += 1;
     q.defer(getStats, repo);
   });
 
-  lineReader.on('end', () => {
+  lineReader.on('close', () => {
+    console.log(colors.blue('Working through', reposCount, 'repos'));
     q.awaitAll((err, stats) => {
       if (err) {
         console.error('Could not finish collecting stats');
