@@ -7,5 +7,5 @@ addons:
     - cloc
 script:
 - npm test
-- node bin/collect-repos -u mapbox -o repos.json
+- node bin/collect-repos -u lukasmartinelli -o repos.json
 - node bin/collect-repo-stats -i repos.json -o repostats.json
