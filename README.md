@@ -33,7 +33,7 @@ collect-repos -u mapbox -o repos.json
 Fetch GitHub statistics for all repos in the input file and store them in a new JSON file.
 
 ```
-collect-repo-stats -i repos.json -u mapbox -o repos.json
+collect-repo-stats -i repos.json -o repos.json
 ```
 
 
