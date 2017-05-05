@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+const repo = require("../lib/repo");
+const program = require('commander');
+const fs = require('fs');
+
+program
+  .option('-i, --input [file]', 'Text file listing the repos')
+  .option('-o, --output [file]', 'JSON file containing the repos')
+  .parse(process.argv);
+
+if(!process.env.GITHUB_ACCESS_TOKEN) {
+  console.error('GITHUB_ACCESS_TOKEN not set to a valid GitHub access token')
+  program.outputHelp();
+}
+
+if (program.input && program.output) {
+  var lineReader = require('readline').createInterface({
+    input: fs.createReadStream(program.input)
+  });
+
+  lineReader.on('line', function (line) {
+    repo.getRepo(line, (err, repo) => {
+      if(err) throw err;
+      fs.appendFile(program.output, JSON.stringify(repo) + '\n', (err) => {
+        if (err) throw err;
+        console.log(`${repo.full_name} created at ${new Date(repo.created_at).toLocaleDateString()} is ${repo.private ? 'private' : 'public'}`);
+      });
+    });
+  });
+} else {
+  program.outputHelp();
+}
